@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>EA Cloud</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript"></script>
+</head>
+<body style="background-color: #DCE1E5; color: #435F7C;">
+    <div style="padding: 50px 120px;">
+        <form id="login-form" class="form-signin" style="text-align: center">
+            <img class="mb-4" src="assets/logo.png" width="300"><br><br>
+            <input type="text" id="inputEmail" class="form-control" placeholder="E-mail cím" required="" autofocus="">
+            <br>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Jelszó" required="">
+            <br>
+            <div id="error" style="display: none;" class="alert alert-danger" role="alert">
+                Hibás e-mail cím vagy jelszó.
+            </div>
+            <button style="background-color: #435f7c; border-color: #435f7c;" class="btn btn-primary btn-block" type="submit">Bejelentkezés</button>
+
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        $("#login-form").submit(function (e) {
+            e.preventDefault();
+            $("#error").hide();
+            var name = $("#inputEmail").val();
+            var pass = $("#inputPassword").val();
+            $.post("https://cloud.euroadvance.hu/api/login", {
+                username: name,
+                password: pass,
+            }, function (response) {
+                if (!response.error) {
+                    console.log(JSON.stringify({ name: response.username, pass, token: response.session }));
+                } else {
+                    $("#error").show();
+                }
+            });
+        });
+    </script>
+</body>
