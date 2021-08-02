@@ -754,7 +754,7 @@ app.whenReady().then(() => {
     }
 
     setInterval(function () {
-        autoUpdater.checkForUpdatesAndNotify();
+        autoUpdater.checkForUpdates();
     }, 10000);
 });
 
@@ -779,20 +779,25 @@ if (!gotTheLock) {
     });
 }
 
+let downloadingUpdate = false;
 autoUpdater.on('update-available', () => {
-
+    if (!downloadingUpdate) {
+        downloadingUpdate = true;
+        autoUpdater.downloadUpdate();
+    }
 });
 
 autoUpdater.on('update-downloaded', () => {
-    autoUpdater.quitAndInstall();
+    autoUpdater.quitAndInstall(false, true);
 });
 
 const exeName = path.basename(process.execPath);
+console.log(path.dirname(process.execPath))
 app.setLoginItemSettings({
     openAtLogin: true,
-    path: process.execPath,
+    path: path.dirname(process.execPath),
     args: [
-        '--processStart', "${exeName}",
-        '--process-start-args', "--hidden"
+        '--processStart', `"${exeName}"`,
+        '--process-start-args', `"--hidden"`
     ]
 });
