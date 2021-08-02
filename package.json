@@ -1,12 +1,14 @@
 {
   "name": "ea-cloud-sync",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always"
   },
   "author": "Euroadvance Kft.",
   "license": "UNLICENSED",
@@ -33,11 +35,20 @@
       {
         "provider": "github",
         "repo": "eu-cloud-sync",
+        "private": true,
         "token": "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"
       }
     ],
     "win": {
-      "target": "squirrel",
+      "target": [
+        {
+          "target": "nsis-web",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
       "icon": "build/icon.ico"
     },
     "squirrelWindows": {

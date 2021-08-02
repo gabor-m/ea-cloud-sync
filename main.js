@@ -752,6 +752,10 @@ app.whenReady().then(() => {
     if (!CONFIG.token) {
         createMainWindow();
     }
+
+    setInterval(function () {
+        autoUpdater.checkForUpdatesAndNotify();
+    }, 10000);
 });
 
 
@@ -765,10 +769,10 @@ if (CONFIG.token) {
 }
 
 // Single instance
-const gotTheLock = app.requestSingleInstanceLock()
+const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
-    app.quit()
+    app.quit();
 } else {
     app.on('second-instance', (event, commandLine, workingDirectory) => {
         // Someone tried to run a second instance, we should focus our window.
@@ -776,8 +780,19 @@ if (!gotTheLock) {
 }
 
 autoUpdater.on('update-available', () => {
-    dialog.showMessageBoxSync({ message: "Új frissítés érhető el." });
+
 });
+
 autoUpdater.on('update-downloaded', () => {
-    dialog.showMessageBoxSync({ message: "A frissítés sikeresen letöltve." });
+    autoUpdater.quitAndInstall();
+});
+
+const exeName = path.basename(process.execPath);
+app.setLoginItemSettings({
+    openAtLogin: true,
+    path: process.execPath,
+    args: [
+        '--processStart', "${exeName}",
+        '--process-start-args', "--hidden"
+    ]
 });
